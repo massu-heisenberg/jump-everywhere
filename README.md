@@ -5,7 +5,7 @@ TODO:
 1. support jump vue tag
 2. support jump everywhere
 3. support alias settings
-   4
+4. try to read vue.config.js alias config
 
 Others:
 
