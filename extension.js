@@ -4,6 +4,7 @@ const vscode = require("vscode");
 const path = require("path");
 const fs = require("fs");
 const SourceJumpProvider = require("./sourceJumpProvider");
+const { extnames } = require("./constants");
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 
@@ -13,20 +14,10 @@ const SourceJumpProvider = require("./sourceJumpProvider");
 function activate(context) {
   // Use the console to output diagnostic information (console.log) and errors (console.error)
   // This line of code will only be executed once when your extension is activated
-  console.log('Congratulations, your extension "source-jump" is now active!');
+  console.log('Extension "source-jump" is now active!');
   function supportedExtname(filePath) {
     const extname = path.extname(filePath).toLowerCase();
-    return [
-      ".js",
-      ".ts",
-      ".jsx",
-      ".mjs",
-      ".vue",
-      ".scss",
-      ".css",
-      ".less",
-      ".json",
-    ].includes(extname);
+    return extnames.includes(extname);
   }
 
   function getAllFilePaths(dirPath, fileArray = []) {
