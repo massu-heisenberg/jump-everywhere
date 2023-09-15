@@ -1,7 +1,7 @@
 {
-	"name": "source-jump",
-	"displayName": "source-jump",
-	"description": "",
+	"name": "jump-everywhere",
+	"displayName": "jump-everywhere",
+	"description": "jump everywhere for vscode",
 	"version": "0.0.4",
 	"engines": {
 		"vscode": "^1.82.0"

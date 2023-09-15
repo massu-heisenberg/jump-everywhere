@@ -2,7 +2,7 @@ const vscode = require("vscode");
 const path = require("path");
 const { extnames } = require("./constants");
 
-const findFile = (workspaceFolder, importPath) => {
+const matchedFileListHandler = (workspaceFolder, importPath) => {
   const extname = path.extname(importPath);
   if (extname) {
     return workspaceFolder.children.filter((f) => f.includes(importPath));
@@ -20,6 +20,21 @@ const findFile = (workspaceFolder, importPath) => {
     return list || [];
   }
 };
+
+const npmBundleHandler = (list, workspaceFolderPath, importPath) => {
+  const isNpmBundle = list.every(f => f.includes('node_modules'));
+  if (isNpmBundle) {
+    // TODO
+    let sourcePath = path.resolve(workspaceFolderPath, 'node_modules', importPath);
+    const sourcePackageInfo = require(path.resolve(sourcePath, 'package.json'));
+    if (sourcePackageInfo.main && typeof sourcePackageInfo.main === 'string') {
+      sourcePath = path.resolve(sourcePath, sourcePackageInfo.main);
+      return [sourcePath];
+    }
+    return list.filter(f => f.includes(sourcePath)) || list;
+  }
+  return list;
+}
 
 module.exports = class SourceJumpProvider {
   constructor(options) {
@@ -45,8 +60,7 @@ module.exports = class SourceJumpProvider {
           : importPath.replace(/@|~/g, "");
         // 匹配文件目录
         this.workspaceFolders.forEach((w) => {
-          //   const result = w.children.filter((f) => f.includes(importPath));
-          const result = findFile(w, importPath);
+          const result = npmBundleHandler(matchedFileListHandler(w, importPath), w.workspaceFolderPath, importPath);
           matchFilePath = [...matchFilePath, ...(result || [])];
         });
       }
@@ -58,7 +72,7 @@ module.exports = class SourceJumpProvider {
         if (matchFilePath.length > 1) {
           matchFilePath = matchFilePath.filter(filePath => !filePath.includes('node_modules'));
         }
-        // console.log(importPath, matchFilePath);
+        console.log(importPath, matchFilePath);
         return matchFilePath.map((filePath) => {
           return {
             originSelectionRange: document.getWordRangeAtPosition(position),

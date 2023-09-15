@@ -14,7 +14,7 @@ const { extnames } = require("./constants");
 function activate(context) {
   // Use the console to output diagnostic information (console.log) and errors (console.error)
   // This line of code will only be executed once when your extension is activated
-  console.log('Extension "source-jump" is now active!');
+  console.log('Extension "jump-everywhere" is now active!');
   function supportedExtname(filePath) {
     const extname = path.extname(filePath).toLowerCase();
     return extnames.includes(extname);
@@ -46,7 +46,7 @@ function activate(context) {
     workspaceFolders.forEach((w) => {
       const workspaceFolderPath = w.uri.fsPath;
       workspacePathList.push({
-        workspaceFolder: workspaceFolderPath,
+        workspaceFolderPath: workspaceFolderPath,
         children: getAllFilePaths(workspaceFolderPath),
       });
       const watcher = vscode.workspace.createFileSystemWatcher(
